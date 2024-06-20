@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Password Generator</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script>
+        function copyPassword() {
+            var copyText = document.getElementById("generatedPassword");
+            navigator.clipboard.writeText(copyText.value).then(function() {
+                var xhr = new XMLHttpRequest();
+                xhr.open("POST", "/copy", true);
+                xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+                xhr.onreadystatechange = function() {
+                    if (xhr.readyState == 4 && xhr.status == 200) {
+                        var response = JSON.parse(xhr.responseText);
+                        document.getElementById("copyMessage").innerText = response.message;
+                    }
+                };
+                xhr.send("password=" + encodeURIComponent(copyText.value));
+            });
+        }
+
+        function generatePassword() {
+            var length = document.getElementById("length").value;
+            var specialChars = document.getElementById("specialChars").checked;
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", "/generate", true);
+            xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState == 4 && xhr.status == 200) {
+                    var response = JSON.parse(xhr.responseText);
+                    document.getElementById("generatedPassword").value = response.password;
+                    document.getElementById("copyMessage").innerText = "";
+                }
+            };
+            xhr.send("length=" + length + "&special_chars=" + specialChars);
+        }
+    </script>
+</head>
+<body>
+    <h1>Password Generator</h1>
+    <form id="passwordForm" onsubmit="event.preventDefault(); generatePassword();">
+        <label for="length">Password Length:</label>
+        <input type="number" id="length" name="length" min="1" value="12" required>
+        <br>
+        <input type="checkbox" id="specialChars" name="special_chars" checked>
+        <label for="specialChars">Include Special Characters</label>
+        <br>
+        <button type="submit">Generate</button>
+    </form>
+    <br>
+    <label for="generatedPassword">Generated Password:</label>
+    <input type="text" onclick="copyPassword()" id="generatedPassword" readonly>
+    <p id="copyMessage"></p>
+</body>
+</html>
