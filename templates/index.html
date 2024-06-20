@@ -3,7 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <title>Password Generator</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+       <!-- Add tailwind via CDN -->
+       <script src="https://cdn.tailwindcss.com"></script>
+       <script>
+           // Initialize Tailwind with dark mode support
+           tailwind.config = {
+               darkMode: 'media', // Use 'media' for automatic dark mode detection
+           }
+       </script>
     <script>
         function copyPassword() {
             var copyText = document.getElementById("generatedPassword");
@@ -38,20 +45,32 @@
         }
     </script>
 </head>
-<body>
-    <h1>Password Generator</h1>
-    <form id="passwordForm" onsubmit="event.preventDefault(); generatePassword();">
-        <label for="length">Password Length:</label>
-        <input type="number" id="length" name="length" min="1" value="12" required>
-        <br>
-        <input type="checkbox" id="specialChars" name="special_chars" checked>
-        <label for="specialChars">Include Special Characters</label>
-        <br>
-        <button type="submit">Generate</button>
-    </form>
-    <br>
-    <label for="generatedPassword">Generated Password:</label>
-    <input type="text" onclick="copyPassword()" id="generatedPassword" readonly>
-    <p id="copyMessage"></p>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen">
+    <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
+        <h1 class="text-2xl font-bold mb-4 text-center">Password Generator</h1>
+        <form id="passwordForm" onsubmit="event.preventDefault(); generatePassword();" class="space-y-4">
+            <div>
+                <label for="length" class="block text-gray-700">Password Length:</label>
+                <input type="number" id="length" name="length" min="1" value="12" required
+                    class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+            </div>
+            <div class="flex items-center">
+                <input type="checkbox" id="specialChars" name="special_chars" checked
+                    class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded">
+                <label for="specialChars" class="ml-2 block text-gray-700">Include Special Characters</label>
+            </div>
+            <div class="flex justify-center">
+                <button type="submit" class="px-4 py-2 bg-indigo-600 text-white font-medium rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                    Generate
+                </button>
+            </div>
+        </form>
+        <div class="mt-4">
+            <label for="generatedPassword" class="block text-gray-700">Generated Password:</label>
+            <input type="text" onclick="copyPassword()" id="generatedPassword" readonly
+                class="mt-1 block w-full px-3 py-2 bg-gray-200 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm cursor-pointer">
+            <p id="copyMessage" class="mt-2 text-green-500"></p>
+        </div>
+    </div>
 </body>
 </html>
